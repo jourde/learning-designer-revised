@@ -1064,6 +1064,205 @@ main {
   padding: 18px clamp(18px, 4vw, 72px) 20px;
 }
 
+/* === Grid (tableur) view === */
+.board.layout-grid {
+  flex-direction: column;
+  overflow: auto;
+  padding: 0;
+  gap: 0;
+}
+.grid-view-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  min-height: 100%;
+}
+.grid-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 12px;
+}
+.grid-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  padding: 6px 8px;
+  background: var(--surface-light);
+  border-bottom: 2px solid var(--line);
+  font-weight: 600;
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  white-space: nowrap;
+  text-align: left;
+}
+.grid-col-num     { width: 32px;  text-align: center; }
+.grid-col-type    { width: 136px; }
+.grid-col-dur     { width: 70px;  }
+.grid-col-loc     { width: 100px; }
+.grid-col-group   { width: 100px; }
+.grid-col-sync    { width: 84px;  }
+.grid-col-teacher { width: 92px;  }
+.grid-col-eval    { width: 100px; }
+.grid-col-desc    { /* flex remaining */ }
+.grid-col-actions { width: 66px;  text-align: center; }
+.grid-activity-row td {
+  padding: 3px 4px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+.grid-activity-row:hover td { background: var(--hover-bg); }
+.grid-activity-row td:first-child {
+  border-left: 3px solid transparent;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 600;
+  text-align: center;
+}
+.grid-session-row td {
+  padding: 6px 10px;
+  background: var(--surface-light);
+  border-top: 2px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.grid-session-label {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  white-space: nowrap;
+  margin-right: 6px;
+}
+.grid-session-title-input {
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-body);
+  width: 240px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  outline: none;
+  font-family: inherit;
+}
+.grid-session-title-input:hover,
+.grid-session-title-input:focus {
+  background: var(--hover-bg-mid);
+  outline: 2px solid var(--primary);
+  outline-offset: 0;
+}
+.grid-session-total {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 400;
+  margin-left: 10px;
+}
+.grid-select {
+  width: 100%;
+  border: 1px solid transparent;
+  background: transparent;
+  font-size: 12px;
+  color: var(--text-body);
+  padding: 3px 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  appearance: auto;
+  outline: none;
+  font-family: inherit;
+}
+.grid-select:hover  { background: var(--hover-bg-mid); border-color: var(--line); }
+.grid-select:focus  { outline: 2px solid var(--primary); outline-offset: 0; }
+.grid-dur-wrap { display: flex; align-items: center; gap: 2px; }
+.grid-dur-input {
+  width: 44px;
+  border: 1px solid transparent;
+  background: transparent;
+  font-size: 12px;
+  color: var(--text-body);
+  padding: 3px 4px;
+  border-radius: 4px;
+  text-align: right;
+  font-family: inherit;
+  outline: none;
+}
+.grid-dur-input:hover { background: var(--hover-bg-mid); border-color: var(--line); }
+.grid-dur-input:focus { outline: 2px solid var(--primary); outline-offset: 0; }
+.grid-dur-unit { font-size: 11px; color: var(--muted); white-space: nowrap; }
+.grid-type-cell { display: flex; align-items: center; gap: 5px; }
+.grid-type-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.grid-type-select {
+  flex: 1;
+  border: 1px solid transparent;
+  background: transparent;
+  font-size: 12px;
+  color: var(--text-body);
+  padding: 3px 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  appearance: auto;
+  font-family: inherit;
+  outline: none;
+  min-width: 0;
+}
+.grid-type-select:hover { background: var(--hover-bg-mid); border-color: var(--line); }
+.grid-type-select:focus { outline: 2px solid var(--primary); outline-offset: 0; }
+.grid-desc-input {
+  width: 100%;
+  border: 1px solid transparent;
+  background: transparent;
+  font-size: 12px;
+  color: var(--text-body);
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-family: inherit;
+  outline: none;
+  resize: none;
+  overflow: hidden;
+  height: 24px;
+  line-height: 1.5;
+  display: block;
+}
+.grid-desc-input:hover { background: var(--hover-bg-mid); border-color: var(--line); }
+.grid-desc-input:focus { outline: 2px solid var(--primary); outline-offset: 0; height: auto; min-height: 24px; overflow: auto; }
+.grid-action-btns { display: flex; gap: 2px; align-items: center; justify-content: center; }
+.grid-action-btn {
+  width: 20px; height: 20px;
+  border: none; background: transparent;
+  color: var(--muted); cursor: pointer;
+  border-radius: 3px; font-size: 12px; line-height: 1; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.grid-action-btn:hover { background: var(--hover-bg-mid); color: var(--text-body); }
+.grid-action-btn.del:hover { background: #fee2e2; color: #dc2626; }
+.grid-add-activity-row td { padding: 2px 4px; border-bottom: 1px solid var(--line); }
+.grid-add-activity-btn {
+  background: none;
+  border: 1px dashed var(--line);
+  color: var(--muted);
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+}
+.grid-add-activity-btn:hover { background: var(--hover-bg); border-color: var(--primary); color: var(--primary); }
+.grid-add-session-row td { padding: 8px 12px; }
+.grid-add-session-btn {
+  background: none;
+  border: 1px dashed var(--line);
+  color: var(--muted);
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.grid-add-session-btn:hover { background: var(--hover-bg); border-color: var(--primary); color: var(--primary); }
+
 .session-card {
   display: flex;
   flex-direction: column;
@@ -2118,6 +2317,19 @@ main {
             </svg>
             <span id="board-layout-columns-text" class="sr-only">Colonnes</span>
           </button>
+          <button
+            id="board-layout-grid-btn"
+            class="layout-toggle-btn"
+            type="button"
+            aria-pressed="false"
+            title="Grille"
+            aria-label="Grille"
+          >
+            <svg class="material-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 2v3H5V5h15zm-8 14H5v-4h7v4zm0-6H5v-4h7v4zm8 6h-6v-4h6v4zm0-6h-6v-4h6v4z"/>
+            </svg>
+            <span id="board-layout-grid-text" class="sr-only">Grille</span>
+          </button>
         </div>
       </div>
       <div class="toolbar-right">
@@ -2786,6 +2998,8 @@ const boardLayoutListBtn = document.getElementById("board-layout-list-btn");
 const boardLayoutColumnsBtn = document.getElementById("board-layout-columns-btn");
 const boardLayoutListText = document.getElementById("board-layout-list-text");
 const boardLayoutColumnsText = document.getElementById("board-layout-columns-text");
+const boardLayoutGridBtn  = document.getElementById("board-layout-grid-btn");
+const boardLayoutGridText = document.getElementById("board-layout-grid-text");
 const newDesignBtn = document.getElementById("new-design-btn");
 const importDesignBtn = document.getElementById("import-design-btn");
 const exportDesignBtn = document.getElementById("export-design-btn");
@@ -3035,7 +3249,19 @@ const I18N = {
     partitionTypeSync: "Synchronicité",
     partitionTypePresence: "Présence formateur",
     partitionTotal: "Total",
-    partitionSession: "Session"
+    partitionSession: "Session",
+    viewGrid: "Grille",
+    gridColType: "Type",
+    gridColDuration: "Durée",
+    gridColLocation: "Lieu",
+    gridColGroup: "Groupe",
+    gridColSync: "Sync",
+    gridColTeacher: "Formateur",
+    gridColEval: "Évaluation",
+    gridColDesc: "Description",
+    gridAddActivity: "+ Activité",
+    gridAddSession: "+ Ajouter une séance",
+    gridSessionPrefix: "Séance"
   },
   en: {
     docTitle: "Learning Design Interface - Prototype",
@@ -3210,7 +3436,19 @@ const I18N = {
     partitionTypeSync: "Synchronicity",
     partitionTypePresence: "Trainer presence",
     partitionTotal: "Total",
-    partitionSession: "Session"
+    partitionSession: "Session",
+    viewGrid: "Grid",
+    gridColType: "Type",
+    gridColDuration: "Duration",
+    gridColLocation: "Location",
+    gridColGroup: "Group",
+    gridColSync: "Sync",
+    gridColTeacher: "Trainer",
+    gridColEval: "Assessment",
+    gridColDesc: "Description",
+    gridAddActivity: "+ Activity",
+    gridAddSession: "+ Add a session",
+    gridSessionPrefix: "Session"
   }
 };
 
@@ -3235,11 +3473,15 @@ const MARKDOWN_ACTIONS = [
 ];
 
 function getBoardLayout() {
-  return state?.meta?.boardLayout === "list" ? "list" : "columns";
+  const v = state?.meta?.boardLayout;
+  if (v === "list") return "list";
+  if (v === "grid") return "grid";
+  return "columns";
 }
 
 function setBoardLayout(layout) {
-  const nextLayout = layout === "list" ? "list" : "columns";
+  const allowed = ["list", "columns", "grid"];
+  const nextLayout = allowed.includes(layout) ? layout : "columns";
   if (getBoardLayout() === nextLayout) return;
   state.meta.boardLayout = nextLayout;
   saveState();
@@ -3420,13 +3662,17 @@ function applyLocalizedUI() {
   boardLayoutToggle.setAttribute("aria-label", t("viewModeLabel"));
   boardLayoutListText.textContent = t("viewList");
   boardLayoutColumnsText.textContent = t("viewColumns");
+  boardLayoutGridText.textContent = t("viewGrid");
   boardLayoutListBtn.title = t("viewList");
   boardLayoutColumnsBtn.title = t("viewColumns");
+  boardLayoutGridBtn.title = t("viewGrid");
   boardLayoutListBtn.setAttribute("aria-label", t("viewList"));
   boardLayoutColumnsBtn.setAttribute("aria-label", t("viewColumns"));
-  const listActive = getBoardLayout() === "list";
-  boardLayoutListBtn.setAttribute("aria-pressed", listActive ? "true" : "false");
-  boardLayoutColumnsBtn.setAttribute("aria-pressed", listActive ? "false" : "true");
+  boardLayoutGridBtn.setAttribute("aria-label", t("viewGrid"));
+  const activeLayout = getBoardLayout();
+  boardLayoutListBtn.setAttribute("aria-pressed",    activeLayout === "list"    ? "true" : "false");
+  boardLayoutColumnsBtn.setAttribute("aria-pressed", activeLayout === "columns" ? "true" : "false");
+  boardLayoutGridBtn.setAttribute("aria-pressed",    activeLayout === "grid"    ? "true" : "false");
   newDesignBtn.textContent = t("new");
   importDesignBtn.textContent = t("import");
   exportDesignBtn.textContent = t("export");
@@ -3563,7 +3809,7 @@ function hydrateState(parsed, fallback = defaultState()) {
   if (!["settings", "analysis"].includes(hydrated.meta.activeTab)) {
     hydrated.meta.activeTab = "settings";
   }
-  if (!["columns", "list"].includes(hydrated.meta.boardLayout)) {
+  if (!["columns", "list", "grid"].includes(hydrated.meta.boardLayout)) {
     hydrated.meta.boardLayout = "columns";
   }
 
@@ -5674,6 +5920,7 @@ function moveActivityByOffset(sessionId, activityId, offset) {
 }
 
 board.addEventListener("dragover", (event) => {
+  if (getBoardLayout() === "grid") return;
   if (!dragState || dragState.type !== "session") return;
   event.preventDefault();
   clearSessionDropIndicators();
@@ -5690,6 +5937,7 @@ board.addEventListener("dragover", (event) => {
 });
 
 board.addEventListener("drop", (event) => {
+  if (getBoardLayout() === "grid") return;
   if (!dragState || dragState.type !== "session") return;
   event.preventDefault();
   const targetId = board.dataset.dropSessionId || null;
@@ -5699,6 +5947,283 @@ board.addEventListener("drop", (event) => {
   render();
 });
 
+// ─── Grid (tableur) view ────────────────────────────────────────────────────
+
+function buildGridSelect(options, currentValue, className) {
+  const sel = document.createElement("select");
+  sel.className = className;
+  options.forEach(({ value, label }) => {
+    const opt = document.createElement("option");
+    opt.value = value;
+    opt.textContent = label;
+    if (value === currentValue) opt.selected = true;
+    sel.appendChild(opt);
+  });
+  return sel;
+}
+
+function buildGridSessionRow(session, sIdx) {
+  const tr = document.createElement("tr");
+  tr.className = "grid-session-row";
+  tr.dataset.sessionId = session.id;
+
+  const td = document.createElement("td");
+  td.setAttribute("colspan", "10");
+
+  const totalDur = session.activities.reduce((s, a) => s + (Number(a.duration) || 0), 0);
+
+  const lbl = document.createElement("span");
+  lbl.className = "grid-session-label";
+  lbl.textContent = `${t("gridSessionPrefix")} ${sIdx + 1}`;
+
+  const titleInput = document.createElement("input");
+  titleInput.type = "text";
+  titleInput.className = "grid-session-title-input";
+  titleInput.value = session.title;
+  titleInput.placeholder = t("sessionTitlePlaceholder");
+  titleInput.addEventListener("input", (e) => {
+    session.title = e.target.value;
+    saveState();
+    renderPartitionView();
+    renderTopPanel();
+  });
+
+  const totalSpan = document.createElement("span");
+  totalSpan.className = "grid-session-total";
+  totalSpan.textContent = `— ${totalDur} min`;
+
+  td.appendChild(lbl);
+  td.appendChild(titleInput);
+  td.appendChild(totalSpan);
+  tr.appendChild(td);
+  return tr;
+}
+
+function buildGridActivityRow(session, act, aIdx) {
+  const tr = document.createElement("tr");
+  tr.className = "grid-activity-row";
+  tr.dataset.actId = act.id;
+
+  const mkTd = () => document.createElement("td");
+
+  // Col 1 — #
+  const numTd = mkTd();
+  numTd.textContent = String(aIdx + 1);
+  numTd.style.borderLeftColor = colorForType(act.type);
+  tr.appendChild(numTd);
+
+  // Col 2 — Type
+  const typeTd = mkTd();
+  const typeCell = document.createElement("div");
+  typeCell.className = "grid-type-cell";
+  const dot = document.createElement("span");
+  dot.className = "grid-type-dot";
+  dot.style.background = colorForType(act.type);
+  const typeSel = buildGridSelect(
+    LEARNING_TYPES.map(lt => ({ value: lt.id, label: lt.label })),
+    act.type, "grid-type-select"
+  );
+  typeSel.addEventListener("change", (e) => {
+    act.type = e.target.value;
+    dot.style.background = colorForType(act.type);
+    numTd.style.borderLeftColor = colorForType(act.type);
+    saveState();
+    renderTopPanel();
+    renderPartitionView();
+  });
+  typeCell.appendChild(dot);
+  typeCell.appendChild(typeSel);
+  typeTd.appendChild(typeCell);
+  tr.appendChild(typeTd);
+
+  // Col 3 — Duration
+  const durTd = mkTd();
+  const durWrap = document.createElement("div");
+  durWrap.className = "grid-dur-wrap";
+  const durInput = document.createElement("input");
+  durInput.type = "number";
+  durInput.className = "grid-dur-input";
+  durInput.min = "1";
+  durInput.value = String(act.duration);
+  durInput.addEventListener("input", (e) => {
+    act.duration = Math.max(1, Number(e.target.value) || 1);
+    saveState();
+    renderTopPanel();
+    renderPartitionView();
+    renderGridView(); // refresh session totals
+  });
+  const durUnit = document.createElement("span");
+  durUnit.className = "grid-dur-unit";
+  durUnit.textContent = "min";
+  durWrap.appendChild(durInput);
+  durWrap.appendChild(durUnit);
+  durTd.appendChild(durWrap);
+  tr.appendChild(durTd);
+
+  // Col 4–8 — Select fields
+  const selectCols = [
+    { opts: LOCATION_OPTIONS,  val: act.locationMode,    key: "locationMode" },
+    { opts: GROUP_MODE_OPTIONS, val: act.groupMode,       key: "groupMode" },
+    { opts: SYNC_OPTIONS,       val: act.syncMode,        key: "syncMode" },
+    { opts: TRAINER_OPTIONS,    val: act.teacherPresence, key: "teacherPresence" },
+    { opts: EVAL_OPTIONS,       val: act.evaluationMode,  key: "evaluationMode" },
+  ];
+  selectCols.forEach(({ opts, val, key }) => {
+    const sTd = mkTd();
+    const sel = buildGridSelect(
+      opts.map(o => ({ value: o.value, label: o.label })),
+      val, "grid-select"
+    );
+    sel.addEventListener("change", (e) => {
+      act[key] = e.target.value;
+      saveState();
+      renderPartitionView();
+    });
+    sTd.appendChild(sel);
+    tr.appendChild(sTd);
+  });
+
+  // Col 9 — Description
+  const descTd = mkTd();
+  const descInput = document.createElement("textarea");
+  descInput.className = "grid-desc-input";
+  descInput.rows = 1;
+  descInput.value = act.description;
+  descInput.placeholder = t("activityDescriptionPlaceholder") || "—";
+  descInput.addEventListener("input", (e) => {
+    act.description = e.target.value;
+    saveState();
+  });
+  descTd.appendChild(descInput);
+  tr.appendChild(descTd);
+
+  // Col 10 — Actions ↑ ↓ ✕
+  const actTd = mkTd();
+  const btns = document.createElement("div");
+  btns.className = "grid-action-btns";
+
+  const mkBtn = (label, title, handler, extraClass) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "grid-action-btn" + (extraClass ? " " + extraClass : "");
+    b.textContent = label;
+    b.title = title;
+    b.addEventListener("click", handler);
+    return b;
+  };
+
+  btns.appendChild(mkBtn("↑", t("partitionMoveUp"), () => {
+    if (aIdx === 0) return;
+    [session.activities[aIdx - 1], session.activities[aIdx]] =
+      [session.activities[aIdx], session.activities[aIdx - 1]];
+    saveState(); renderGridView(); renderTopPanel(); renderPartitionView();
+  }));
+  btns.appendChild(mkBtn("↓", t("partitionMoveDown"), () => {
+    if (aIdx >= session.activities.length - 1) return;
+    [session.activities[aIdx], session.activities[aIdx + 1]] =
+      [session.activities[aIdx + 1], session.activities[aIdx]];
+    saveState(); renderGridView(); renderTopPanel(); renderPartitionView();
+  }));
+  btns.appendChild(mkBtn("✕", t("deleteActivity") || "Supprimer", () => {
+    session.activities.splice(aIdx, 1);
+    saveState(); renderGridView(); renderTopPanel(); renderPartitionView();
+  }, "del"));
+
+  actTd.appendChild(btns);
+  tr.appendChild(actTd);
+  return tr;
+}
+
+function renderGridView() {
+  board.innerHTML = "";
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "grid-view-wrapper";
+
+  const table = document.createElement("table");
+  table.className = "grid-table";
+
+  // Sticky header
+  const thead = document.createElement("thead");
+  const hRow = document.createElement("tr");
+  [
+    { cls: "grid-col-num",     label: "#" },
+    { cls: "grid-col-type",    label: t("gridColType") },
+    { cls: "grid-col-dur",     label: t("gridColDuration") },
+    { cls: "grid-col-loc",     label: t("gridColLocation") },
+    { cls: "grid-col-group",   label: t("gridColGroup") },
+    { cls: "grid-col-sync",    label: t("gridColSync") },
+    { cls: "grid-col-teacher", label: t("gridColTeacher") },
+    { cls: "grid-col-eval",    label: t("gridColEval") },
+    { cls: "grid-col-desc",    label: t("gridColDesc") },
+    { cls: "grid-col-actions", label: "" },
+  ].forEach(({ cls, label }) => {
+    const th = document.createElement("th");
+    th.className = cls;
+    th.textContent = label;
+    hRow.appendChild(th);
+  });
+  thead.appendChild(hRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+
+  state.sessions.forEach((session, sIdx) => {
+    tbody.appendChild(buildGridSessionRow(session, sIdx));
+    session.activities.forEach((act, aIdx) => {
+      tbody.appendChild(buildGridActivityRow(session, act, aIdx));
+    });
+
+    // Add-activity row
+    const addActRow = document.createElement("tr");
+    addActRow.className = "grid-add-activity-row";
+    const addActTd = document.createElement("td");
+    addActTd.setAttribute("colspan", "10");
+    const addActBtn = document.createElement("button");
+    addActBtn.className = "grid-add-activity-btn";
+    addActBtn.type = "button";
+    addActBtn.textContent = t("gridAddActivity");
+    addActBtn.addEventListener("click", () => {
+      session.activities.push({
+        id: nextId(), type: "read", duration: 10,
+        groupMode: "whole", teacherPresence: "present",
+        syncMode: "sync", locationMode: "onsite",
+        evaluationMode: "none", description: "", notes: "", tools: []
+      });
+      saveState(); renderGridView(); renderTopPanel(); renderPartitionView();
+    });
+    addActTd.appendChild(addActBtn);
+    addActRow.appendChild(addActTd);
+    tbody.appendChild(addActRow);
+  });
+
+  // Add-session row
+  const addSessRow = document.createElement("tr");
+  addSessRow.className = "grid-add-session-row";
+  const addSessTd = document.createElement("td");
+  addSessTd.setAttribute("colspan", "10");
+  const addSessBtn = document.createElement("button");
+  addSessBtn.className = "grid-add-session-btn";
+  addSessBtn.type = "button";
+  addSessBtn.textContent = t("gridAddSession");
+  addSessBtn.addEventListener("click", () => {
+    state.sessions.push({
+      id: nextId(), title: "", objectives: "", notes: "",
+      notesExpanded: false, activities: []
+    });
+    saveState(); renderGridView(); renderTopPanel(); renderPartitionView();
+  });
+  addSessTd.appendChild(addSessBtn);
+  addSessRow.appendChild(addSessTd);
+  tbody.appendChild(addSessRow);
+
+  table.appendChild(tbody);
+  wrapper.appendChild(table);
+  board.appendChild(wrapper);
+}
+
+// ─── End grid view ──────────────────────────────────────────────────────────
+
 function render() {
   closeChoiceMenu();
   closeToolPicker();
@@ -5706,10 +6231,17 @@ function render() {
   renderTopPanel();
   renderPartitionView();
   const boardLayout = getBoardLayout();
+  board.classList.toggle("layout-list",    boardLayout === "list");
+  board.classList.toggle("layout-columns", boardLayout === "columns");
+  board.classList.toggle("layout-grid",    boardLayout === "grid");
+
+  if (boardLayout === "grid") {
+    renderGridView();
+    return;
+  }
+
   const isListLayout = boardLayout === "list";
   const sessionMoveHint = isListLayout ? t("sessionMoveHintList") : t("sessionMoveHintColumns");
-  board.classList.toggle("layout-list", isListLayout);
-  board.classList.toggle("layout-columns", !isListLayout);
   board.innerHTML = "";
   state.sessions.forEach((session, sessionIndex) => {
     const frag = sessionTpl.content.cloneNode(true);
@@ -6213,19 +6745,27 @@ boardLayoutColumnsBtn.addEventListener("click", () => {
   setBoardLayout("columns");
 });
 
-[boardLayoutListBtn, boardLayoutColumnsBtn].forEach((btn) => {
-  btn.addEventListener("keydown", (event) => {
-    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
-    event.preventDefault();
-    if (event.key === "Home" || event.key === "ArrowLeft") {
-      boardLayoutListBtn.focus();
-      setBoardLayout("list");
-      return;
-    }
-    boardLayoutColumnsBtn.focus();
-    setBoardLayout("columns");
-  });
+boardLayoutGridBtn.addEventListener("click", () => {
+  setBoardLayout("grid");
 });
+
+(function () {
+  const layoutBtns = [boardLayoutListBtn, boardLayoutColumnsBtn, boardLayoutGridBtn];
+  const layouts    = ["list", "columns", "grid"];
+  layoutBtns.forEach((btn, i) => {
+    btn.addEventListener("keydown", (event) => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      let idx;
+      if (event.key === "Home")           idx = 0;
+      else if (event.key === "End")       idx = layoutBtns.length - 1;
+      else if (event.key === "ArrowLeft") idx = (i - 1 + layoutBtns.length) % layoutBtns.length;
+      else                                idx = (i + 1) % layoutBtns.length;
+      layoutBtns[idx].focus();
+      setBoardLayout(layouts[idx]);
+    });
+  });
+})();
 
 newDesignBtn.addEventListener("click", () => {
   if (!window.confirm(t("newDesignConfirm"))) return;
