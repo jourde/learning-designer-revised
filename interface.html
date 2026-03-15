@@ -1105,7 +1105,8 @@ main {
 .grid-col-sync    { width: 84px;  }
 .grid-col-teacher { width: 92px;  }
 .grid-col-eval    { width: 100px; }
-.grid-col-desc    { /* flex remaining */ }
+.grid-col-desc    { width: 180px; }
+.grid-col-notes   { width: 180px; }
 .grid-col-actions { width: 66px;  text-align: center; }
 .grid-activity-row td {
   padding: 3px 4px;
@@ -3259,6 +3260,7 @@ const I18N = {
     gridColTeacher: "Formateur",
     gridColEval: "Évaluation",
     gridColDesc: "Description",
+    gridColNotes: "Notes",
     gridAddActivity: "+ Activité",
     gridAddSession: "+ Ajouter une séance",
     gridSessionPrefix: "Séance"
@@ -3446,6 +3448,7 @@ const I18N = {
     gridColTeacher: "Trainer",
     gridColEval: "Assessment",
     gridColDesc: "Description",
+    gridColNotes: "Notes",
     gridAddActivity: "+ Activity",
     gridAddSession: "+ Add a session",
     gridSessionPrefix: "Session"
@@ -5968,7 +5971,7 @@ function buildGridSessionRow(session, sIdx) {
   tr.dataset.sessionId = session.id;
 
   const td = document.createElement("td");
-  td.setAttribute("colspan", "10");
+  td.setAttribute("colspan", "11");
 
   const totalDur = session.activities.reduce((s, a) => s + (Number(a.duration) || 0), 0);
 
@@ -6097,7 +6100,21 @@ function buildGridActivityRow(session, act, aIdx) {
   descTd.appendChild(descInput);
   tr.appendChild(descTd);
 
-  // Col 10 — Actions ↑ ↓ ✕
+  // Col 10 — Notes
+  const notesTd = mkTd();
+  const notesInput = document.createElement("textarea");
+  notesInput.className = "grid-desc-input";
+  notesInput.rows = 1;
+  notesInput.value = act.notes;
+  notesInput.placeholder = t("activityNotesPlaceholder") || "—";
+  notesInput.addEventListener("input", (e) => {
+    act.notes = e.target.value;
+    saveState();
+  });
+  notesTd.appendChild(notesInput);
+  tr.appendChild(notesTd);
+
+  // Col 11 — Actions ↑ ↓ ✕
   const actTd = mkTd();
   const btns = document.createElement("div");
   btns.className = "grid-action-btns";
@@ -6156,6 +6173,7 @@ function renderGridView() {
     { cls: "grid-col-teacher", label: t("gridColTeacher") },
     { cls: "grid-col-eval",    label: t("gridColEval") },
     { cls: "grid-col-desc",    label: t("gridColDesc") },
+    { cls: "grid-col-notes",   label: t("gridColNotes") },
     { cls: "grid-col-actions", label: "" },
   ].forEach(({ cls, label }) => {
     const th = document.createElement("th");
@@ -6178,7 +6196,7 @@ function renderGridView() {
     const addActRow = document.createElement("tr");
     addActRow.className = "grid-add-activity-row";
     const addActTd = document.createElement("td");
-    addActTd.setAttribute("colspan", "10");
+    addActTd.setAttribute("colspan", "11");
     const addActBtn = document.createElement("button");
     addActBtn.className = "grid-add-activity-btn";
     addActBtn.type = "button";
@@ -6201,7 +6219,7 @@ function renderGridView() {
   const addSessRow = document.createElement("tr");
   addSessRow.className = "grid-add-session-row";
   const addSessTd = document.createElement("td");
-  addSessTd.setAttribute("colspan", "10");
+  addSessTd.setAttribute("colspan", "11");
   const addSessBtn = document.createElement("button");
   addSessBtn.className = "grid-add-session-btn";
   addSessBtn.type = "button";
