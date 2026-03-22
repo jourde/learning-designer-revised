@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Learning Designer - Prototype</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
 :root {
   /* ── Tokens fondamentaux ─────────────────────────── */
@@ -2481,6 +2482,7 @@ main {
         <select id="import-format-select" class="panel-select">
           <option value="json">JSON</option>
           <option value="csv">CSV</option>
+          <option value="xlsx">Excel (.xlsx)</option>
         </select>
         <div class="modal-actions">
           <button id="import-modal-cancel-btn" class="btn btn-light" type="button">Annuler</button>
@@ -3168,7 +3170,7 @@ const I18N = {
     sessionTitlePlaceholder: "Titre du moment",
     activityDescriptionPlaceholder: "Activité",
     newDesignConfirm: "Créer un nouveau design et écraser le contenu actuel ?",
-    importInvalid: "Fichier invalide. Importez un JSON ou CSV exporté depuis cette application.",
+    importInvalid: "Fichier invalide. Importez un JSON, CSV ou Excel exporté depuis cette application.",
     commandPlaceholder: "Collez ici la commande institutionnelle déjà définie...",
     personasPlaceholder: "Collez ici les personas (profils) déjà définis...",
     slidersPlaceholder: "Collez ici les curseurs déjà définis...",
@@ -3184,18 +3186,15 @@ const I18N = {
     mdBold: "Gras",
     mdItalic: "Italique",
     mdHeading: "Titre",
-    mdList: "Liste",
-    mdLink: "Lien",
+    mdList: "Liste à puces",
+    mdOrderedList: "Liste numérotée",
     mdQuote: "Citation",
-    mdCode: "Code",
-    mdSeparator: "Séparateur",
     mdPlaceholderBold: "texte en gras",
     mdPlaceholderItalic: "texte en italique",
     mdPlaceholderHeading: "Titre",
-    mdPlaceholderList: "element de liste",
-    mdPlaceholderLink: "texte du lien",
+    mdPlaceholderList: "élément de liste",
+    mdPlaceholderOrderedList: "élément de liste",
     mdPlaceholderQuote: "citation",
-    mdPlaceholderCode: "code",
     uiLanguage: "Langue de l’interface",
     moved: "Élément déplacé.",
     an01: "Un ou plusieurs graphiques peuvent être incorrects, car une ou plusieurs activités n’ont pas de durée valide.",
@@ -3358,7 +3357,7 @@ const I18N = {
     sessionTitlePlaceholder: "Moment title",
     activityDescriptionPlaceholder: "Activity",
     newDesignConfirm: "Create a new design and replace current content?",
-    importInvalid: "Invalid file. Import a JSON or CSV exported by this application.",
+    importInvalid: "Invalid file. Import a JSON, CSV or Excel file exported by this application.",
     commandPlaceholder: "Paste the previously defined institutional brief here...",
     personasPlaceholder: "Paste previously defined personas here...",
     slidersPlaceholder: "Paste previously defined sliders here...",
@@ -3374,18 +3373,15 @@ const I18N = {
     mdBold: "Bold",
     mdItalic: "Italic",
     mdHeading: "Heading",
-    mdList: "List",
-    mdLink: "Link",
+    mdList: "Bullet list",
+    mdOrderedList: "Numbered list",
     mdQuote: "Quote",
-    mdCode: "Code",
-    mdSeparator: "Separator",
     mdPlaceholderBold: "bold text",
     mdPlaceholderItalic: "italic text",
     mdPlaceholderHeading: "Heading",
     mdPlaceholderList: "list item",
-    mdPlaceholderLink: "link text",
+    mdPlaceholderOrderedList: "list item",
     mdPlaceholderQuote: "quote",
-    mdPlaceholderCode: "code",
     uiLanguage: "Interface language",
     moved: "Item moved.",
     an01: "One or more graphs might not display correctly, because one or more activities do not have a valid duration.",
@@ -3478,10 +3474,8 @@ const MARKDOWN_ACTIONS = [
   { id: "italic", text: "I", titleKey: "mdItalic" },
   { id: "heading", text: "H", titleKey: "mdHeading" },
   { id: "list", text: "-", titleKey: "mdList" },
-  { id: "link", text: "[]", titleKey: "mdLink" },
-  { id: "quote", text: ">", titleKey: "mdQuote" },
-  { id: "code", text: "</>", titleKey: "mdCode" },
-  { id: "separator", text: "---", titleKey: "mdSeparator" }
+  { id: "ordered-list", text: "1.", titleKey: "mdOrderedList" },
+  { id: "quote", text: ">", titleKey: "mdQuote" }
 ];
 
 function getBoardLayout() {
@@ -5038,6 +5032,10 @@ function buildMarkdownExport() {
       lines.push("> Objectifs:");
       lines.push(markdownQuoteBlock(session.objectives));
     }
+    if (session.intentions) {
+      lines.push("> Choix pédagogiques:");
+      lines.push(markdownQuoteBlock(session.intentions));
+    }
     if (session.notes) {
       lines.push("> Notes:");
       lines.push(markdownQuoteBlock(session.notes));
@@ -5093,6 +5091,7 @@ function buildHtmlExportDocument() {
       <section>
         <h2>${sessionIndex + 1}. ${escapeHtml(session.title)}</h2>
         ${session.objectives ? `<p><strong>Objectifs:</strong><br />${escapeHtmlWithBreaks(session.objectives)}</p>` : ""}
+        ${session.intentions ? `<p><strong>Choix pédagogiques:</strong><br />${escapeHtmlWithBreaks(session.intentions)}</p>` : ""}
         ${session.notes ? `<p><strong>Notes:</strong> ${escapeHtml(session.notes)}</p>` : ""}
         <ol>${activities}</ol>
       </section>
@@ -5191,6 +5190,7 @@ function buildSpreadsheetRows() {
     "session_index",
     "session_title",
     "session_objectives",
+    "session_intentions",
     "session_notes",
     "activity_index",
     "learning_type",
@@ -5225,6 +5225,7 @@ function buildSpreadsheetRows() {
           sessionIndex + 1,
           session.title || "",
           session.objectives || "",
+          session.intentions || "",
           session.notes || "",
           "",
           "",
@@ -5260,6 +5261,7 @@ function buildSpreadsheetRows() {
           sessionIndex + 1,
           session.title || "",
           session.objectives || "",
+          session.intentions || "",
           session.notes || "",
           activityIndex + 1,
           labelForType(activity.type),
@@ -5696,9 +5698,8 @@ function applyMarkdownAction(textarea, actionId) {
     italic: t("mdPlaceholderItalic"),
     heading: t("mdPlaceholderHeading"),
     list: t("mdPlaceholderList"),
-    link: t("mdPlaceholderLink"),
-    quote: t("mdPlaceholderQuote"),
-    code: t("mdPlaceholderCode")
+    orderedList: t("mdPlaceholderOrderedList"),
+    quote: t("mdPlaceholderQuote")
   };
   if (actionId === "bold") {
     wrapSelection(textarea, wrapper, "**", "**", placeholders.bold);
@@ -5716,34 +5717,20 @@ function applyMarkdownAction(textarea, actionId) {
     prefixSelectionLines(textarea, wrapper, "- ", placeholders.list);
     return;
   }
-  if (actionId === "link") {
+  if (actionId === "ordered-list") {
     const { start, end } = getStoredSelection(wrapper, textarea);
     const selected = textarea.value.slice(start, end);
-    const label = selected || placeholders.link;
-    const replacement = `[${label}](https://)`;
-    replaceSelection(textarea, wrapper, replacement, start + 1, start + 1 + label.length);
+    const content = selected || placeholders.orderedList;
+    const replacement = String(content)
+      .split("\n")
+      .map((line, i) => `${i + 1}. ${line}`)
+      .join("\n");
+    replaceSelection(textarea, wrapper, replacement, start, start + replacement.length);
     return;
   }
   if (actionId === "quote") {
     prefixSelectionLines(textarea, wrapper, "> ", placeholders.quote);
     return;
-  }
-  if (actionId === "code") {
-    const { start, end } = getStoredSelection(wrapper, textarea);
-    const selected = textarea.value.slice(start, end);
-    if (selected && !selected.includes("\n")) {
-      wrapSelection(textarea, wrapper, "`", "`", placeholders.code);
-      return;
-    }
-    const content = selected || placeholders.code;
-    const replacement = `\`\`\`\n${content}\n\`\`\``;
-    replaceSelection(textarea, wrapper, replacement, start + 4, start + 4 + content.length);
-    return;
-  }
-  if (actionId === "separator") {
-    const { start, end } = getStoredSelection(wrapper, textarea);
-    const replacement = "\n\n---\n\n";
-    replaceSelection(textarea, wrapper, replacement, start + replacement.length, start + replacement.length);
   }
 }
 
@@ -6896,12 +6883,14 @@ importModalCancelBtn.addEventListener("click", () => {
 });
 
 importModalConfirmBtn.addEventListener("click", () => {
-  const format = importFormatSelect.value === "csv" ? "csv" : "json";
+  const format = importFormatSelect.value === "csv" ? "csv"
+               : importFormatSelect.value === "xlsx" ? "xlsx"
+               : "json";
   importFileInput.dataset.format = format;
   importFileInput.accept =
-    format === "csv"
-      ? ".csv,text/csv,text/plain"
-      : ".json,application/json,text/json";
+    format === "csv"  ? ".csv,text/csv,text/plain"
+    : format === "xlsx" ? ".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    : ".json,application/json,text/json";
   importFileInput.value = "";
   importFileInput.click();
   closeImportModal();
@@ -6924,13 +6913,23 @@ importFileInput.addEventListener("change", async (e) => {
   }
   const forcedFormat = String(importFileInput.dataset.format || "").toLowerCase();
   const filename = String(file.name || "").toLowerCase();
-  const selectedFormat = forcedFormat === "csv" || filename.endsWith(".csv") ? "csv" : "json";
+  const selectedFormat =
+    forcedFormat === "xlsx" || filename.endsWith(".xlsx") ? "xlsx"
+    : forcedFormat === "csv" || filename.endsWith(".csv") ? "csv"
+    : "json";
   try {
-    const text = await file.text();
     let hydrated = null;
-    if (selectedFormat === "csv") {
+    if (selectedFormat === "xlsx") {
+      const buffer = await file.arrayBuffer();
+      const workbook = XLSX.read(buffer, { type: "array" });
+      const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+      const csvText = XLSX.utils.sheet_to_csv(firstSheet);
+      hydrated = buildStateFromCsv(csvText);
+    } else if (selectedFormat === "csv") {
+      const text = await file.text();
       hydrated = buildStateFromCsv(text);
     } else {
+      const text = await file.text();
       const parsed = JSON.parse(text);
       hydrated = hydrateState(parsed, null);
     }
@@ -6945,7 +6944,7 @@ importFileInput.addEventListener("change", async (e) => {
     alert(t("importInvalid"));
   } finally {
     importFileInput.value = "";
-    importFileInput.accept = ".json,.csv,application/json,text/csv";
+    importFileInput.accept = ".json,.csv,.xlsx,application/json,text/csv";
     delete importFileInput.dataset.format;
   }
 });
