@@ -1314,6 +1314,7 @@ main {
 
 .session-title,
 .session-objectives,
+.session-intentions,
 .activity-description,
 .session-notes-input,
 .activity-notes-input {
@@ -2376,6 +2377,10 @@ main {
             <textarea class="session-objectives" rows="2" placeholder="Objectifs du moment..."></textarea>
             <button class="expand-btn" type="button" aria-label="Plein écran">⤢</button>
           </div>
+          <div class="expandable-field">
+            <textarea class="session-intentions" rows="2" placeholder="Choix pédagogiques (ex. : pourquoi cet ordre d'activités ? quelle alternance de modalités ? quel rythme ?)"></textarea>
+            <button class="expand-btn" type="button" aria-label="Plein écran">⤢</button>
+          </div>
         </div>
         <div class="activities"></div>
         <footer class="session-footer">
@@ -3160,7 +3165,7 @@ const I18N = {
     groupTitleMode: "Modalité",
     groupTitleEvaluation: "Évaluation",
     newActivityDescription: "Nouvelle activité",
-    sessionTitlePlaceholder: "Moment",
+    sessionTitlePlaceholder: "Titre du moment",
     activityDescriptionPlaceholder: "Activité",
     newDesignConfirm: "Créer un nouveau design et écraser le contenu actuel ?",
     importInvalid: "Fichier invalide. Importez un JSON ou CSV exporté depuis cette application.",
@@ -3169,6 +3174,8 @@ const I18N = {
     slidersPlaceholder: "Collez ici les curseurs déjà définis...",
     sessionNotesPlaceholder: "Notes de la séance...",
     sessionObjectivesPlaceholder: "Objectifs du moment...",
+    sessionIntentionsLabel: "Choix pédagogiques",
+    sessionIntentionsPlaceholder: "Choix pédagogiques (ex. : pourquoi cet ordre d'activités ? quelle alternance de modalités ? quel rythme ?)",
     activityNotesPlaceholder: "Notes de l'activité...",
     durationMinutesSr: "Durée en minutes",
     fullscreen: "Plein écran",
@@ -3348,7 +3355,7 @@ const I18N = {
     groupTitleMode: "Mode",
     groupTitleEvaluation: "Assessment",
     newActivityDescription: "New activity",
-    sessionTitlePlaceholder: "Moment",
+    sessionTitlePlaceholder: "Moment title",
     activityDescriptionPlaceholder: "Activity",
     newDesignConfirm: "Create a new design and replace current content?",
     importInvalid: "Invalid file. Import a JSON or CSV exported by this application.",
@@ -3357,6 +3364,8 @@ const I18N = {
     slidersPlaceholder: "Paste previously defined sliders here...",
     sessionNotesPlaceholder: "Session notes...",
     sessionObjectivesPlaceholder: "Moment objectives...",
+    sessionIntentionsLabel: "Pedagogical choices",
+    sessionIntentionsPlaceholder: "Pedagogical choices (e.g.: why this order of activities? what alternation of modalities? what rhythm?)",
     activityNotesPlaceholder: "Activity notes...",
     durationMinutesSr: "Duration in minutes",
     fullscreen: "Fullscreen",
@@ -3721,6 +3730,9 @@ function applyLocalizedUI() {
   document.querySelectorAll(".session-objectives").forEach((input) => {
     input.placeholder = t("sessionObjectivesPlaceholder");
   });
+  document.querySelectorAll(".session-intentions").forEach((input) => {
+    input.placeholder = t("sessionIntentionsPlaceholder");
+  });
   document.querySelectorAll(".activity-notes-input").forEach((input) => {
     input.placeholder = t("activityNotesPlaceholder");
   });
@@ -3763,6 +3775,7 @@ function hydrateState(parsed, fallback = defaultState()) {
       id: session?.id || nextId(),
       title: typeof session?.title === "string" ? session.title : defaultSessionTitle(sessionIndex + 1),
       objectives: typeof session?.objectives === "string" ? session.objectives : "",
+      intentions: typeof session?.intentions === "string" ? session.intentions : "",
       notes: typeof session?.notes === "string" ? session.notes : "",
       notesExpanded: Boolean(session?.notesExpanded),
       activities: Array.isArray(session?.activities)
@@ -5499,6 +5512,7 @@ function buildStateFromCsv(csvText) {
         id: nextId(),
         title: sessionTitle,
         objectives: "",
+        intentions: "",
         notes: sessionNotes,
         notesExpanded: false,
         activities: []
@@ -6226,7 +6240,7 @@ function renderGridView() {
   addSessBtn.textContent = t("gridAddSession");
   addSessBtn.addEventListener("click", () => {
     state.sessions.push({
-      id: nextId(), title: "", objectives: "", notes: "",
+      id: nextId(), title: "", objectives: "", intentions: "", notes: "",
       notesExpanded: false, activities: []
     });
     saveState(); renderGridView(); renderTopPanel(); renderPartitionView();
@@ -6267,6 +6281,7 @@ function render() {
     const strip = frag.querySelector(".session-strip");
     const title = frag.querySelector(".session-title");
     const objectives = frag.querySelector(".session-objectives");
+    const intentions = frag.querySelector(".session-intentions");
     const activitiesWrap = frag.querySelector(".activities");
     const totalDuration = frag.querySelector(".total-duration");
     const sessionNotes = frag.querySelector(".session-notes");
@@ -6295,6 +6310,13 @@ function render() {
     objectives.placeholder = t("sessionObjectivesPlaceholder");
     objectives.addEventListener("input", (e) => {
       session.objectives = e.target.value;
+      saveState();
+    });
+    intentions.value = session.intentions || "";
+    intentions.setAttribute("aria-label", `${t("sessionIntentionsLabel")} ${sessionIndex + 1}`);
+    intentions.placeholder = t("sessionIntentionsPlaceholder");
+    intentions.addEventListener("input", (e) => {
+      session.intentions = e.target.value;
       saveState();
     });
     deleteSessionBtn.title = t("deleteSession");
@@ -6741,6 +6763,7 @@ addSessionBtn.addEventListener("click", () => {
     id: nextId(),
     title: "",
     objectives: "",
+    intentions: "",
     notes: "",
     notesExpanded: false,
     activities: []
