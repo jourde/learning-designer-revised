@@ -1437,6 +1437,10 @@ main {
   font-weight: 600;
 }
 
+.board.intentions-collapsed .session-title-wrap > .expandable-field {
+  display: none;
+}
+
 .activities {
   flex: 1 1 auto;
   padding: 0 12px 12px;
@@ -2430,6 +2434,7 @@ main {
         </div>
         <span class="toolbar-sep" aria-hidden="true"></span>
         <div class="toolbar-cluster">
+          <button id="toggle-intentions-btn" class="btn btn-light" type="button">Masquer les intentions</button>
           <button id="expand-notes-btn" class="btn btn-light">Déplier les notes</button>
           <div id="board-layout-toggle" class="layout-toggle" role="group" aria-label="Mode d'affichage des séances">
           <button
@@ -3171,6 +3176,7 @@ const NEW_DESIGN_META = {
 
 const defaultState = () => ({
   allNotesExpanded: false,
+  intentionsCollapsed: false,
   topPanelCollapsed: false,
   meta: { ...DEFAULT_META },
   sessions: [],
@@ -3281,6 +3287,8 @@ const I18N = {
     addMoment: "+ Ajouter un moment",
     expandNotes: "Déplier les notes",
     collapseNotes: "Replier les notes",
+    hideIntentions: "Masquer les intentions",
+    showIntentions: "Afficher les intentions",
     new: "Nouveau",
     import: "Importer",
     export: "Exporter",
@@ -3470,6 +3478,8 @@ const I18N = {
     addMoment: "+ Add moment",
     expandNotes: "Expand notes",
     collapseNotes: "Collapse notes",
+    hideIntentions: "Hide intentions",
+    showIntentions: "Show intentions",
     new: "New",
     import: "Import",
     export: "Export",
@@ -3949,6 +3959,7 @@ function hydrateState(parsed, fallback = defaultState()) {
 
   const hydrated = {
     allNotesExpanded: Boolean(parsed.allNotesExpanded),
+    intentionsCollapsed: Boolean(parsed.intentionsCollapsed),
     topPanelCollapsed: Boolean(parsed.topPanelCollapsed),
     meta: {
       ...DEFAULT_META,
@@ -4042,6 +4053,7 @@ function loadState() {
 function createNewDesignState() {
   return {
     allNotesExpanded: false,
+    intentionsCollapsed: false,
     topPanelCollapsed: false,
     meta: { ...NEW_DESIGN_META },
     sessions: [],
@@ -6468,6 +6480,7 @@ function render() {
   board.classList.toggle("layout-list",    boardLayout === "list");
   board.classList.toggle("layout-columns", boardLayout === "columns");
   board.classList.toggle("layout-grid",    boardLayout === "grid");
+  board.classList.toggle("intentions-collapsed", Boolean(state.intentionsCollapsed));
 
   if (boardLayout === "grid") {
     renderGridView();
@@ -6851,6 +6864,10 @@ function render() {
   ensureMarkdownToolbars(board);
   localizeExpandableFieldControls(board);
   expandNotesBtn.textContent = state.allNotesExpanded ? t("collapseNotes") : t("expandNotes");
+  const toggleIntentionsBtn = document.getElementById("toggle-intentions-btn");
+  if (toggleIntentionsBtn) {
+    toggleIntentionsBtn.textContent = state.intentionsCollapsed ? t("showIntentions") : t("hideIntentions");
+  }
 }
 
 function bindTopPanelEvents() {
@@ -6991,6 +7008,12 @@ addSessionBtn.addEventListener("click", () => {
 
 expandNotesBtn.addEventListener("click", () => {
   state.allNotesExpanded = !state.allNotesExpanded;
+  saveState();
+  render();
+});
+
+document.getElementById("toggle-intentions-btn")?.addEventListener("click", () => {
+  state.intentionsCollapsed = !state.intentionsCollapsed;
   saveState();
   render();
 });
